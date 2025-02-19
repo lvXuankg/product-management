@@ -3,7 +3,7 @@ require("dotenv").config();
 const database = require("./config/database");
 
 const route = require("./routes/client/index.route");
-
+const routeAdmin = require("./routes/admin/index.route");
 database.connect();
 const app = express();
 const port = process.env.PORT;
@@ -15,6 +15,7 @@ app.use(express.static("public"));
 
 //Routes
 route(app);
+routeAdmin(app);
 
 app.listen(port, () => {
     console.log(`Expample app listening on port ${port}`);
