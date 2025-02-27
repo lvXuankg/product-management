@@ -1,6 +1,8 @@
 const express = require('express');
 var methodOveride = require("method-override");
 const bodyParser = require("body-parser");
+var flash = require('connect-flash');
+var session = require('express-session');
 require("dotenv").config();
 const database = require("./config/database");
 
@@ -25,10 +27,28 @@ app.use(bodyParser.json());
 app.set("views", "./views");
 app.set("view engine", "pug");
 
+// Flash 
+
+app.use(session({
+    secret: 'coding', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.messages = req.flash(); // Gán flash messages vào biến locals để Pug truy cập
+    next();
+});
+
+// End Flash 
+
 // App Locals Variables 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-app.use(express.static("public"));
+app.use(express.static("public")); 
 
 //Routes
 route(app);

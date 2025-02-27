@@ -3,6 +3,7 @@ const Product = require("../../models/product.model");
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
 const paginationHelper = require("../../helpers/pagination");
+
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
     
@@ -51,6 +52,8 @@ module.exports.changeStatus = async (req, res) => {
 
     await Product.updateOne({_id: id}, {status : status});
 
+    req.flash('success', 'Cập nhật sản phẩm thành công!');
+    
     res.redirect("back");
 }
 
@@ -62,9 +65,11 @@ module.exports.changeMulti = async (req, res) => {
     switch(type){
         case "active":
             await Product.updateMany({_id: { $in : ids}}, {status: "active"});
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
             break;
         case "inactive":
             await Product.updateMany({_id: { $in : ids}}, {status: "inactive"});
+            req.flash('success', `Cập nhật trạng thái thành công ${ids.length} sản phẩm!`);
             break;
         case "delete-all":
             await Product.updateMany(
@@ -93,12 +98,12 @@ module.exports.deleteItem = async (req, res) => {
     const id = req.params.id;
     
     // await Product.deleteOne({_id : id});
-    const result = await Product.updateOne(
+    await Product.updateOne(
         {_id: id}, 
         {
             deleted : true,
             deletedAt: new Date()
     });
-    console.log(result);
+    
     res.redirect("back");
 }
