@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
 
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 // Flash 
@@ -47,8 +47,8 @@ app.use((req, res, next) => {
 
 // App Locals Variables 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
-
-app.use(express.static("public")); 
+// console.log(__dirname);
+app.use(express.static(`${__dirname}/public`)); 
 
 //Routes
 route(app);
