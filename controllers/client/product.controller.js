@@ -17,13 +17,23 @@ module.exports.index = async (req, res) => {
         products: newProducts
     });
 }
-module.exports.create = (req, res) => {
-    res.render("client/pages/products/index", {
-        pageTitle: "Tạo sản phẩm"
-    });
-}
-module.exports.edit = (req, res) => {
-    res.render("client/pages/products/index", {
-        pageTitle: "Sửa sản phẩm"
-    });
+module.exports.detail = async (req, res) => {
+    try{
+        const find = {
+            deleted : false,
+            status: "active",
+            slug: req.params.slug
+        };
+        const product = await Product.findOne(find);
+        if(!product){
+            return res.redirect("/products");
+        }
+        res.render("client/pages/products/detail", {
+            pageTitle: "Chi tiết sản phẩm",
+            product: product
+        });
+    } catch(error){
+        res.redirect("/products");
+    }
+    
 }

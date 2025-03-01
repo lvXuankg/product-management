@@ -1,3 +1,11 @@
+a{
+    color: #000;
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: none;
+    color: #000;
+}
 /* Header  */
 .header{
     border-bottom: 1px solid #ddd;
