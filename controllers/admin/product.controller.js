@@ -121,7 +121,6 @@ module.exports.create = (req, res) => {
 
 // [POST] /admin/products/create 
 module.exports.createPost = async (req, res) => {
-   
     // console.log(req.file);
     req.body.price = parseInt(req.body.price);
     req.body.stock = parseInt(req.body.stock);
@@ -133,11 +132,6 @@ module.exports.createPost = async (req, res) => {
     } else{
         req.body.position = parseInt(req.body.position);
     }
-
-    if(req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
-    
 
     const product = new Product(req.body);
     await product.save();
@@ -172,12 +166,8 @@ module.exports.editPatch = async (req, res) => {
     req.body.stock = parseInt(req.body.stock);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.position = parseInt(req.body.position);
+ 
     
-    if(req.file){
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
-    
-
     try{
         await Product.updateOne({_id: req.params.id},req.body)
         req.flash("success", "Cập nhật sản phẩm thành công!");
@@ -185,8 +175,6 @@ module.exports.editPatch = async (req, res) => {
         req.flash("error", "Cập nhật sản phẩm thất bại!");
     }
     
-    
-
     res.redirect('back');
 }
 
