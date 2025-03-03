@@ -35,7 +35,19 @@ module.exports.index = async (req, res) => {
     
     // End Pagination 
 
-    const products = await Product.find(find).sort({position: "asc"}).limit(objectPagination.limitItems).skip(objectPagination.skip);
+    // Sort 
+    let sort = {};
+
+    if(req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey] = req.query.sortValue;
+    } else {
+        sort.position = "asc";
+    }
+    
+
+    // End Sort 
+
+    const products = await Product.find(find).sort(sort).limit(objectPagination.limitItems).skip(objectPagination.skip);
 
     // console.log(products);
     res.render("admin/pages/products/index", {
