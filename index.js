@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 var methodOveride = require("method-override");
 const bodyParser = require("body-parser");
 var flash = require('connect-flash');
@@ -26,6 +27,9 @@ app.use(bodyParser.json());
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
+
+// TinyMCE 
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 // Flash 
 
