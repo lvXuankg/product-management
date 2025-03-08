@@ -6,7 +6,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 require("dotenv").config();
 const database = require("./config/database");
-
+var cookies = require('cookie-parser');
 const systemConfig = require("./config/system");
 
 const route = require("./routes/client/index.route");
@@ -28,6 +28,8 @@ app.use(bodyParser.json());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
+// use Cookies 
+app.use(cookies());
 // TinyMCE 
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 

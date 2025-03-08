@@ -3,9 +3,24 @@ const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 // [GET] /admin/auth/login 
 module.exports.login = async(req,res) => {
-    res.render("admin/pages/auth/login", {
-        pageTitle: "Trang đăng nhập"
-    });
+    if(req.cookies.token){
+        const user = await Account.findOne({
+            token: req.cookies.token,
+            deleted: false
+        });
+        if(user){
+            res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+        } else {
+            res.clearCookie("token");
+            res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
+        }
+        
+    } else {
+        res.render("admin/pages/auth/login", {
+            pageTitle: "Trang đăng nhập"
+        });
+    }
+    
 }
 
 // [POST] /admin/auth/login 
