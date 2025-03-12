@@ -4,6 +4,7 @@ var methodOveride = require("method-override");
 const bodyParser = require("body-parser");
 var flash = require('connect-flash');
 var session = require('express-session');
+const moment = require('moment');
 require("dotenv").config();
 const database = require("./config/database");
 var cookies = require('cookie-parser');
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
 
 // App Locals Variables 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 // console.log(__dirname);
 app.use(express.static(`${__dirname}/public`)); 
 

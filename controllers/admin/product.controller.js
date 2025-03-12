@@ -1,3 +1,4 @@
+const Account = require("../../models/account.model");
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
 const systemConfig = require("../../config/system");
@@ -49,6 +50,15 @@ module.exports.index = async (req, res) => {
 
     const products = await Product.find(find).sort(sort).limit(objectPagination.limitItems).skip(objectPagination.skip);
 
+    for (const product of products) {
+        const user = await Account.findOne({
+            _id : product.createdBy.account_id
+        });
+
+        if(user) {
+            product.userName = user.fullName;
+        }
+    }
     // console.log(products);
     res.render("admin/pages/products/index", {
         pageTitle: "Trang danh sách sản phẩm",
@@ -90,7 +100,10 @@ module.exports.changeMulti = async (req, res) => {
                 {_id: { $in : ids}}, 
                 {
                     deleted: true,
-                    deletedAt: new Date()
+                    deletedBy: {
+                        account_id: res.locals.user.id,
+                        deletedAt: new Date()
+                    }
                 })
             req.flash('success', `Đã xóa thành công ${ids.length} sản phẩm!`);
             break;
@@ -117,7 +130,10 @@ module.exports.deleteItem = async (req, res) => {
         {_id: id}, 
         {
             deleted : true,
-            deletedAt: new Date()
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
     });
     req.flash('success', `Đã xóa thành công sản phẩm!`);
     
@@ -126,6 +142,7 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create 
 module.exports.create = async (req, res) => {
+
     let find = {
         deleted: false
     }
@@ -150,7 +167,9 @@ module.exports.createPost = async (req, res) => {
     } else{
         req.body.position = parseInt(req.body.position);
     }
-
+    req.body.createdBy = {
+        account_id: res.locals.user.id
+    };
     const product = new Product(req.body);
     await product.save();
 
