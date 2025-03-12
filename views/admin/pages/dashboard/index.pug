@@ -3,3 +3,10 @@ extends ../../layouts/default.pug
 
 block main
     h1 Trang tổng quan
+    div Chào #{user.fullName}
+    div 
+        img(
+            src=user.avatar
+            style="width: 350px"
+        )
+    div #{role.title}
