@@ -34,7 +34,7 @@ if(listInputQuantity.length > 0) {
       const productId = input.getAttribute("product-id");
       const quantity = parseInt(input.value);
     
-      console.log(productId + " " + quantity);
+      
       if(productId && quantity > 0) {
         window.location.href = `/cart/update/${productId}/${quantity}`;
       }
