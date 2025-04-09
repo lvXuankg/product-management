@@ -1,7 +1,10 @@
 extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
  
 block main
+    +alert-success(5000)
+    +alert-error(5000)
     .container.my-3
         .row
             .col-12
@@ -46,9 +49,9 @@ block main
                                     td #{product.totalPrice}$
                                     td
                                         a(
-                                        href=`/cart/delete/${product.productId}`
+                                        href=`/cart/delete/${product.product_id}`
                                         class="btn btn-danger"
-                                        ) Xóa
+                                        ) Xóa 
                         else
                             p Chưa có sản phẩm nào trong giỏ hàng.
                 
