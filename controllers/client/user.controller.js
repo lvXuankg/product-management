@@ -107,12 +107,53 @@ module.exports.forgotPasswordPost = async(req, res) => {
     const objectForgotPassword = {
         email: email,
         otp: otp,
-        expireAt: Date.now()
+        expireAt: new Date(Date.now() + 180*1000)
     }
 
     const forgotPassword = new ForgotPassword(objectForgotPassword);
     await forgotPassword.save();
 
 
-    res.send(objectForgotPassword);
+    res.redirect(`/user/password/otp?email=${email}`);
+}
+
+// [GET] /user/password/otp
+module.exports.otpPassword = async(req, res) => {
+    const email = req.query.email;
+
+    res.render("client/pages/user/otp-password", {
+        pageTitle: "Nhập mã OTP",
+        email: email
+    });
+}
+
+// [POST] /user/password/otp
+module.exports.otpPasswordPost = async(req, res) => {
+    const email = req.body.email;
+    const otp = req.body.otp;
+
+    const result = await ForgotPassword.findOne({
+        email: email,
+        otp: otp
+    });
+
+    if(!result){
+        req.flash('error', 'otp không hợp lệ');
+        res.redirect('back');
+        return;
+    }
+    const user = await User.findOne({
+        email: email,
+        deleted: false
+    });
+    res.cookie("tokenUser", user.tokenUser);
+
+    res.redirect("/user/password/reset");
+}
+
+// [GET] /user/password/reset
+module.exports.resetPassword = async (req, res) => {
+    res.render("client/pages/user/reset-password", {
+      pageTitle: "Đổi mật khẩu mới"
+    });
 }
