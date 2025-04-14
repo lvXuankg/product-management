@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 var flash = require('connect-flash');
 var session = require('express-session');
 const moment = require('moment');
+const http = require("http");
+const {Server} = require("socket.io");
 require("dotenv").config();
 const database = require("./config/database");
 var cookies = require('cookie-parser');
@@ -17,6 +19,14 @@ database.connect();
 
 const app = express();
 const port = process.env.PORT;
+
+// SocketIO 
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    console.log('a user connected', socket.id);
+});
 
 app.use(methodOveride("_method"));
 
@@ -68,6 +78,6 @@ app.get("*", (req, res) => {
     });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Expample app listening on port ${port}`);
 })
