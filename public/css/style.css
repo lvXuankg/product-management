@@ -326,3 +326,14 @@ a:hover{
     cursor: pointer;
 }
 /* End chat */
+
+/* emoji-picker  */
+.tooltip{
+    visibility: hidden;
+}
+
+.tooltip.shown{
+    visibility: visible;
+    opacity: 1;
+}
+/* end emoji-picker  */
