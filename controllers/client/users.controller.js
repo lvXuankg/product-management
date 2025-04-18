@@ -30,3 +30,25 @@ module.exports.notFriend = async (req, res) => {
       users: users
   });
 };
+
+// [GET] /users/request
+module.exports.request = async(req, res) => {
+  // SocketIO
+  usersSocket(req, res);
+  // End SocketIO
+
+  // $in: in
+
+  const requestFriends = res.locals.user.requestFriends;
+
+  const users = await User.find({
+    _id: { $in: requestFriends },
+    status: "active",
+    deleted: false
+  }).select("id avatar fullName");
+
+  res.render("client/pages/users/request", {
+    pageTitle: "Lời mời đã gửi",
+    users: users
+  });
+};

@@ -33,5 +33,37 @@ module.exports = async(req, res) => {
                 });
             }
         });
+
+        socket.on("CLIENT_CANCEL_FRIEND", async (userId) => {
+            const myUserId = res.locals.user.id;
+
+            // TH1
+            const existUserAInB = await User.findOne({
+                _id: userId,
+                acceptFriends: myUserId
+            });
+
+            if(existUserAInB){
+                await User.updateOne({
+                    _id: userId
+                }, {
+                    $pull: {acceptFriends: myUserId}
+                });
+            }
+
+            // TH2
+            const existUserBInA = await User.findOne({
+                _id: myUserId,
+                requestFriends: userId
+            });
+
+            if(existUserBInA){
+                await User.updateOne({
+                    _id: myUserId
+                }, {
+                    $pull: {requestFriends: userId}
+                });
+            }
+        })
     });
 }
